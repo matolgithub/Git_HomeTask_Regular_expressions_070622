@@ -7,7 +7,7 @@ def read_csv_file():
     with open("phonebook_raw.csv", encoding='utf-8') as f:
       rows = csv.reader(f, delimiter=",")
       contacts_list = list(rows)
-    pprint(contacts_list)
+    # pprint(contacts_list)
     return contacts_list
 
 # TODO 1: выполните пункты 1-3 ДЗ
@@ -15,8 +15,18 @@ def read_csv_file():
 def create_names_data():
     pass
 
+# приведение телефонов к форматам +7(999)999-99-99 и +7(999)999-99-99 доб.9999
 def modify_phones_data():
-    pass
+    contacts_list = read_csv_file()
+    correct_phone_list = []
+    for i in contacts_list:
+        for j in i:
+            pattern = r"(\+7|8)?\s?\(?(\d+)\)?\s?\-?(\d{3})\-?(\d{2})\-?(\d{2}\,?)(\s*\(?(\доб.)?\s*(\d+)\)?)?"
+            substitution = r"+7(\2)\3-\4-\5 \7\8"
+            res = re.sub(pattern, substitution, j)
+            correct_phone_list.append(res.strip())
+    pprint(correct_phone_list)
+    return correct_phone_list
 
 def delete_double_data():
     pass
@@ -32,5 +42,6 @@ def write_new_csvfile():
 
 
 if __name__ == '__main__':
-    read_csv_file()
+    # read_csv_file()
     # write_new_csvfile()
+    modify_phones_data()
