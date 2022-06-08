@@ -16,12 +16,12 @@ def read_csv_file():
 def modify_phones_data():
     contacts_list = read_csv_file()
     newphone_contlist = []
-    for i in contacts_list:
+    for persons in contacts_list:
         correct_phone_list = []
-        for j in i:
+        for data in persons:
             pattern = r"(\+7|8)?\s?\(?(\d+)\)?\s?\-?(\d{3})\-?(\d{2})\-?(\d{2}\,?)(\s*\(?(\доб.)?\s*(\d+)\)?)?"
             substitution = r"+7(\2)\3-\4-\5 \7\8"
-            res = re.sub(pattern, substitution, j)
+            res = re.sub(pattern, substitution, data)
             correct_phone_list.append(res.strip())
         newphone_contlist.append(correct_phone_list)
     pprint(newphone_contlist)
@@ -29,7 +29,23 @@ def modify_phones_data():
 
 # поместить Фамилию, Имя и Отчество человека в поля lastname, firstname и surname соответственно
 def create_names_data():
-    pass
+    cont_list = modify_phones_data()
+    for persons in cont_list:
+        if len(persons[0].split()) == 3:
+            persons[2] = persons[0].split()[2]
+            persons[1] = persons[0].split()[1]
+            persons[0] = persons[0].split()[0]
+        elif len(persons[0].split()) == 2:
+            persons[1] = persons[0].split()[1]
+            persons[0] = persons[0].split()[0]
+        elif len(persons[0].split()) == 1 and len(persons[1].split()) == 2:
+            persons[2] = persons[1].split()[1]
+            persons[1] = persons[1].split()[0]
+        for index in range(len(persons)):
+            if index >= 7 and persons[index] == '':
+                persons.pop(index)
+    pprint(cont_list)
+    return cont_list
 
 # объединить все дублирующиеся записи о человеке в одну
 def delete_double_data():
@@ -48,5 +64,5 @@ def write_new_csvfile():
 if __name__ == '__main__':
     # read_csv_file()
     # write_new_csvfile()
-    modify_phones_data()
-    # create_names_data()
+    # modify_phones_data()
+    create_names_data()
