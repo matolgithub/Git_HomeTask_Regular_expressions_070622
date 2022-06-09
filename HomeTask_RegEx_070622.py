@@ -1,5 +1,6 @@
 import re
 import csv
+import datetime
 from pprint import pprint
 
 # читаем адресную книгу в формате CSV в список contacts_list
@@ -7,7 +8,7 @@ def read_csv_file():
     with open("phonebook_raw.csv", encoding='utf-8') as f:
       rows = csv.reader(f, delimiter=",")
       contacts_list = list(rows)
-    # pprint(contacts_list)
+
     return contacts_list
 
 # TODO 1: выполните пункты 1-3 ДЗ
@@ -44,7 +45,7 @@ def create_names_data():
         for index in range(len(persons)):
             if index >= 7 and persons[index] == '':
                 persons.pop(index)
-    # pprint(cont_list)
+
     return cont_list
 
 # объединить все дублирующиеся записи о человеке в одну
@@ -65,7 +66,7 @@ def search_double_data():
         for persons in double_cont_list:
             if last_name == persons[0]:
                 double_persons_list.append(persons)
-    # print(double_persons_list)
+
     return double_dict, double_persons_list
 
 # в этой функции реализована зачистка повторений
@@ -99,11 +100,14 @@ def delete_double_data():
 # TODO 2: сохраните получившиеся данные в другой файл
 # код для записи файла в формате CSV
 def write_new_csvfile():
-    with open("phonebook.csv", "w") as f:
+    with open("phonebook.csv", "w", encoding='utf-8', newline='') as f:
       datawriter = csv.writer(f, delimiter=',')
       # Вместо contacts_list подставьте свой список
-      contacts_list = read_csv_file() # потом поменять на новый список
-      datawriter.writerows(contacts_list)
+      new_contacts_list = delete_double_data()
+      datawriter.writerows(new_contacts_list)
+    print('\n', '*' * 70, '\n', f'Файл "phonebook.csv" только что {datetime.datetime.now()} был записан!','\n', '*' * 70)
+
+    return new_contacts_list
 
 
 if __name__ == '__main__':
@@ -112,4 +116,5 @@ if __name__ == '__main__':
     # modify_phones_data()
     # create_names_data()
     # search_double_data()
-    delete_double_data()
+    # delete_double_data()
+    write_new_csvfile()
