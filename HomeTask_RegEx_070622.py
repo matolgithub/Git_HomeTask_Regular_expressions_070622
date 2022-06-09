@@ -24,7 +24,7 @@ def modify_phones_data():
             res = re.sub(pattern, substitution, data)
             correct_phone_list.append(res.strip())
         newphone_contlist.append(correct_phone_list)
-    pprint(newphone_contlist)
+    # pprint(newphone_contlist)
     return newphone_contlist
 
 # поместить Фамилию, Имя и Отчество человека в поля lastname, firstname и surname соответственно
@@ -48,6 +48,19 @@ def create_names_data():
     return cont_list
 
 # объединить все дублирующиеся записи о человеке в одну
+def search_double_data():
+    double_cont_list = create_names_data()
+    double_dict = {}
+    for persons in double_cont_list:
+        count = 0
+        for last_name in double_cont_list:
+            if last_name[0] in persons:
+                count += 1
+                if count > 1:
+                    double_dict[last_name[0]] = count
+    print('Данные о повторениях данных сотрудников (фамилия, кол-во повторений):', double_dict)
+    return double_dict
+
 def delete_double_data():
     pass
 
@@ -65,4 +78,6 @@ if __name__ == '__main__':
     # read_csv_file()
     # write_new_csvfile()
     # modify_phones_data()
-    create_names_data()
+    # create_names_data()
+    # search_double_data()
+    delete_double_data()
