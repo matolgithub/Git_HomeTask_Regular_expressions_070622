@@ -44,13 +44,15 @@ def create_names_data():
         for index in range(len(persons)):
             if index >= 7 and persons[index] == '':
                 persons.pop(index)
-    pprint(cont_list)
+    # pprint(cont_list)
     return cont_list
 
 # объединить все дублирующиеся записи о человеке в одну
+# в этой функции реализован поиск повторений
 def search_double_data():
     double_cont_list = create_names_data()
     double_dict = {}
+    double_persons_list = []
     for persons in double_cont_list:
         count = 0
         for last_name in double_cont_list:
@@ -59,10 +61,40 @@ def search_double_data():
                 if count > 1:
                     double_dict[last_name[0]] = count
     print('Данные о повторениях данных сотрудников (фамилия, кол-во повторений):', double_dict)
-    return double_dict
+    for last_name in double_dict:
+        for persons in double_cont_list:
+            if last_name == persons[0]:
+                double_persons_list.append(persons)
+    # print(double_persons_list)
+    return double_dict, double_persons_list
 
+# в этой функции реализована зачистка повторений
 def delete_double_data():
-    pass
+    double_dict, double_persons_list = search_double_data()
+    double_cont_list = create_names_data()
+    nonedouble_cont_list = []
+    for persons in double_cont_list:
+        if persons[0] not in double_dict:
+            nonedouble_cont_list.append(persons)
+    for last_name in double_dict:
+        totalpers_contlist = []
+        for data in double_persons_list:
+            if last_name == data[0]:
+                for index in range(len(data)):
+                    totalpers_contlist.append(data[index])
+        for item in range(int(len(totalpers_contlist) / 2)):
+            if totalpers_contlist[item] == '' and totalpers_contlist[item + 7] != '':
+                totalpers_contlist[item] = totalpers_contlist[item + 7]
+            elif totalpers_contlist[item] == '' and totalpers_contlist[item + 7] == '':
+                totalpers_contlist[item] = ''
+        totalpers_contlist = totalpers_contlist[:int(len(totalpers_contlist) / 2)]
+        nonedouble_cont_list.append(totalpers_contlist)
+    print(f'Всего было {len(double_cont_list)} строк и {len(double_cont_list) - 1} записей о сотрудниках, теперь '
+          f'после устранения дублей стало {len(nonedouble_cont_list)} строк и {len(nonedouble_cont_list) - 1} '
+          f'записей о сотрудниках.')
+    pprint(nonedouble_cont_list)
+
+    return nonedouble_cont_list
 
 # TODO 2: сохраните получившиеся данные в другой файл
 # код для записи файла в формате CSV
